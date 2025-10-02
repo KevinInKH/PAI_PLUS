@@ -88,7 +88,7 @@ def llama_new_forward(
         use_cfg = False
 
     # ==== NEW: Track running average attention over text→image region ====
-    if use_attn:
+    if use_attn and not use_cfg:
         if not hasattr(self, "avg_attn_weights"):
             self.attn_steps = 0
     
