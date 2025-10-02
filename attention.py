@@ -87,9 +87,28 @@ def llama_new_forward(
     else:
         use_cfg = False
 
+    # ==== NEW: Track running average attention over text→image region ====
+    if use_attn:
+        if not hasattr(self, "avg_attn_weights"):
+            self.attn_steps = 0
+    
+        # First step: initialize avg with text→image region
+        if self.attn_steps == 0:
+            self.avg_attn_weights = attn_weights[
+                :, :, img_end_idx:, img_start_idx:img_end_idx
+            ].mean(dim=dim=(1, 2), keepdim=True)
+        else:
+            # Running average only for the region
+            prev = self.avg_attn_weights
+            curr = attn_weights[:, :, :, img_start_idx:img_end_idx].mean(dim=(1,), keepdim=True)
+            self.avg_attn_weights = prev * self.attn_steps + curr / (self.attn_steps + 1)
+    
+        self.attn_steps += 1
+    # ==============================================
+    
     if use_attn and not use_cfg:
         attn_weights[:, :, -1, img_start_idx:img_end_idx] = (
-            attn_weights[:, :, -1, img_start_idx:img_end_idx].abs() * self.alpha
+            self.alpha * (attn_weights[:, :, -1, img_start_idx:img_end_idx].abs() * (1 - self.beta) + self.avg_attn_weight * self.beta) # fusion current attention pattern and average pattern of previous steps
             + attn_weights[:, :, -1, img_start_idx:img_end_idx]
         )
     ### PAI's modification
@@ -122,6 +141,7 @@ def llama_modify(model, start_layer, end_layer, use_attn, alpha, use_cfg,
     for i in range(start_layer, end_layer):
         model.model.layers[i].self_attn.use_attn = use_attn
         model.model.layers[i].self_attn.alpha = alpha
+        model.model.layers[i].self.attn.beta = beta
         model.model.layers[i].self_attn.use_cfg = use_cfg
         model.model.layers[i].self_attn.img_start_idx = img_start_idx
         model.model.layers[i].self_attn.img_end_idx = img_end_idx
