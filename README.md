@@ -62,7 +62,7 @@ This component is implemented in the `CFG.py` file and is utilized by passing th
 
 ```bash
 <!-- single round evaluation -->
-python pope_eval.py --model MODEL_NAME --data-path /path/to/COCO --pope-type random --use-attn --alpha 0.2 --use-cfg --gamma 1.1 --start-layer 2 --end-layer 32
+python pope_eval.py --model MODEL_NAME --data-path /path/to/COCO --pope-type random --use-attn --alpha 0.2 --beta 1.0 --use-cfg --gamma 1.1 --start-layer 2 --end-layer 32
 
 <!-- multi round evaluation -->
 python pope_chat_eval.py --model MODEL_NAME --data-path /path/to/COCO --pope-type random --use-attn --alpha 0.2 --use-cfg --gamma 1.1 --start-layer 2 --end-layer 32
@@ -79,7 +79,7 @@ python pope_ans.py --ans_file /path/to/answer.json
 - Generate the LVLM's responses and save them in a jsonl file:
 
 ```bash
-python chair_eval.py --model MODEL_NAME --data-path /path/to/COCO --use-attn --alpha 0.2 --use-cfg --gamma 1.1 --start-layer 2 --end-layer 32
+python chair_eval.py --model MODEL_NAME --data-path /path/to/COCO --use-attn --alpha 0.2 --beta 1.0 --use-cfg --gamma 1.1 --start-layer 2 --end-layer 32
 ```
 
 - Calculate CHAIR using the generated jsonl file:
