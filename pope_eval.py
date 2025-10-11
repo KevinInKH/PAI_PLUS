@@ -48,6 +48,7 @@ parser.add_argument("--beam", type=int, default=1)
 parser.add_argument("--sample", action="store_true")
 parser.add_argument("--use-attn", action="store_true")
 parser.add_argument("--alpha", type=float, default=0.2)
+parser.add_argument("--beta", type=float, default=1.0)
 parser.add_argument("--use-mask", action="store_true")
 parser.add_argument("--use-cfg", action="store_true")
 parser.add_argument("--gamma", type=float, default=2)
@@ -116,6 +117,7 @@ for batch_id, data in tqdm(enumerate(pope_loader), total=len(pope_loader)):
             args.end_layer,
             args.use_attn,
             args.alpha,
+            args.beta,
             args.use_cfg,
             model_loader.img_start_idx,
             model_loader.img_end_idx,
