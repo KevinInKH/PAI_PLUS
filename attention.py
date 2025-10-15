@@ -143,7 +143,7 @@ def llama_modify(model, start_layer, end_layer, use_attn, alpha, use_cfg,
         model.model.layers[i].self_attn.use_attn = use_attn
         model.model.layers[i].self_attn.alpha = alpha
         model.model.layers[i].self_attn.beta = beta
-        model.model.layers[i].self_attn.use_cfg = use_cfg
+        model.model.layers[i].self_attn.use_cfg = False # fix the bug that the attention boost is disabled due to use_cfg set to True
         model.model.layers[i].self_attn.img_start_idx = img_start_idx
         model.model.layers[i].self_attn.img_end_idx = img_end_idx
         model.model.layers[i].self_attn.forward = types.MethodType(llama_new_forward, model.model.layers[i].self_attn)
