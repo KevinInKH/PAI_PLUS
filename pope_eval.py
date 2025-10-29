@@ -87,7 +87,7 @@ file_parts = [
     f"pope_eval_{args.pope_type}_layers_{args.start_layer}-{args.end_layer}_tokens_{args.max_tokens}_eos",
     "_sample" if args.sample else "",
     f"_beams_{args.beam}" if args.beam != 1 else "",
-    f"_attn_{args.alpha}" if args.use_attn else "",
+    f"_attn_{args.alpha}_beta_{args.beta}" if args.use_attn else "",
     f"_cfg_{args.gamma}" if args.use_cfg else "",
 ]
 
